@@ -116,7 +116,7 @@ export const verifyCode = async (req, res, next) => {
     user.verificationCode = undefined
     user.verificationCodeExpires = undefined
     await user.save()
-    // Firmar el token aquí
+
     const token = await createAccessToken({ id: user._id })
     res.status(200).json({ message: 'verification successful', token })
   } catch (error) {
@@ -143,10 +143,9 @@ export const secondFactorAuthentication = async (req, res) => {
         message: 'Invalid authentication code'
       })
     }
-    // Generar token de autenticación solo con la id
     const token = await createAccessToken({ id: user._id })
     res.status(200).json({
-      message: 'Login successfull',
+      message: 'Login successful',
       token
     })
   } catch (error) {
@@ -161,7 +160,7 @@ export const resetPassword = async (req, res) => {
 
   const user = await User.findOne({ email })
   if (!user) return res.status(404).json({ message: 'User not found' })
-  // Token solo válido por 1 horas
+
   const token = await createAccessToken({ userId: user._id }, { expiresIn: '1h' })
   const resetLink = `${config.FRONTEND_URL}/changeResetPassword/${token}`
   try {

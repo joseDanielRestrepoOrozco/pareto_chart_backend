@@ -25,7 +25,8 @@ const schema = new mongoose.Schema({
     type: String,
     enum: ['ACTIVE', 'PENDING', 'INACTIVE'],
     default: 'PENDING'
-  }
+  },
+  projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }]
 })
 
 schema.set('toJSON', {
@@ -38,6 +39,7 @@ schema.set('toJSON', {
     delete returnedObject.verificationCode
     delete returnedObject.verificationCodeExpires
     delete returnedObject.status
+    delete returnedObject.projects
   }
 })
 
