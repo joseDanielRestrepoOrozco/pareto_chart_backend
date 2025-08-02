@@ -15,7 +15,7 @@ export const getProjectsByUser = async (req, res, next) => {
   const userId = req.user.id
 
   try {
-    const projects = await Project.find({ user: userId }).select('-user')
+    const projects = await Project.find({ user: userId }).select('-user -problems')
     res.status(200).json(projects)
   } catch (error) {
     next(error)

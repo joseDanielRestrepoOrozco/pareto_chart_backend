@@ -25,7 +25,7 @@ router.put('/:id', updateProject)
 router.delete('/:id', deleteProject)
 
 router.post('/:id/problems', validateSchema(problemSchema), createProblem)
-router.delete('/:id/problems/:problemId', validateSchema(problemSchema), deleteProblem)
-router.put('/:id/problems/:problemId', updateProblem)
+router.delete('/:id/problems/:problemId', deleteProblem)
+router.put('/:id/problems/:problemId', validateSchema(problemSchema), updateProblem)
 
 export default router
