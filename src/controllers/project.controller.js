@@ -86,7 +86,7 @@ export const deleteProject = async (req, res, next) => {
       return res.status(404).json({ error: 'Project not found' })
     }
 
-    await Project.deleteOne(id)
+    await Project.findByIdAndDelete(id)
 
     await Problem.find({ project: id }).deleteMany()
 
