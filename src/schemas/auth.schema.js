@@ -12,12 +12,12 @@ const passwordSchema = z.string({
   .refine((val) => /[0-9]/.test(val), { error: 'La contraseña debe incluir un número' })
   .refine((val) => /[^A-Za-z0-9]/.test(val), { error: 'La contraseña debe incluir un carácter especial' })
 
-const emailSchema = z.string({
+const emailSchema = z.email({
   error: (issue) =>
     issue.input === undefined
       ? 'El correo electrónico es requerido'
       : 'Formato de correo electrónico no válido'
-}).email({ error: 'Formato de correo electrónico no válido' })
+})
 
 export const registerSchema = z.object({
   username: z.string({

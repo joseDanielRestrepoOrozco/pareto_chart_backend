@@ -115,7 +115,6 @@ export const createProblem = async (req, res, next) => {
     })
 
     const savedProblem = await newProblem.save()
-    console.log('Creating problem for project:', id)
     project.problems = project.problems.concat(savedProblem._id)
     await project.save()
     res.status(201).json(savedProblem)

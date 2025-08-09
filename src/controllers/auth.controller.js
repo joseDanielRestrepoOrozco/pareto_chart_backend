@@ -43,7 +43,7 @@ export const login = async (req, res, next) => {
       : false
 
     if (!validPassword) {
-      return res.status(400).json({ message: 'user or password incorrect' })
+      return res.status(400).json({ message: 'Correo o contraseña incorrecta' })
     }
 
     if (user.status !== 'ACTIVE') {
@@ -167,17 +167,13 @@ export const resetPassword = async (req, res) => {
     await sendPassVerificationEmail(user.email, resetLink, user.username)
     res.status(200).json({ message: 'Reset email sent' })
   } catch (error) {
-    console.log('Error sending link:', error)
     res.status(500).json({ message: 'Failed to send verification link', error: error.message })
   }
 }
 
 export const changeResetPassword = async (req, res) => {
-  const { token, newPassword, confirmNewPassword } = req.body
+  const { token, newPassword } = req.body
 
-  if (newPassword !== confirmNewPassword) {
-    return res.status(400).json({ message: "The new password don't match" })
-  }
   try {
     // Decodifica el token usando jwt.verify directamente, no verifyToken middleware
     const decoded = jwt.verify(token, config.SECRET)
