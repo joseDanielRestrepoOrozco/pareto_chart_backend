@@ -171,7 +171,7 @@ export const resetPassword = async (req, res) => {
   }
 }
 
-export const changeResetPassword = async (req, res) => {
+export const changeResetPassword = async (req, res, next) => {
   const { token, newPassword } = req.body
 
   try {
@@ -183,7 +183,7 @@ export const changeResetPassword = async (req, res) => {
     user.passwordHash = password
     await user.save()
     res.status(200).json({ message: 'Password reset successful' })
-  } catch (err) {
-    res.status(400).json({ message: 'Invalid or expired token' })
+  } catch (error) {
+    next(error)
   }
 }
