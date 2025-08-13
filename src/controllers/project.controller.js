@@ -167,3 +167,141 @@ export const updateProblem = async (req, res) => {
     res.status(500).json({ error: 'Failed to update problem' })
   }
 }
+
+export const getParetoAnalysis = async (req, res) => {
+  const { id } = req.params
+  const userId = req.user.id
+  const thresholdParam = req.query.threshold
+
+  let threshold = 80
+  if (typeof thresholdParam !== 'undefined') {
+    const t = Number(thresholdParam)
+    if (!Number.isFinite(t) || t < 0 || t > 100) {
+      return res.status(400).json({ error: 'Invalid threshold. Must be a number between 0 and 100' })
+    }
+    threshold = t
+  }
+
+  try {
+    const project = await Project.findOne({ _id: id, user: userId }).populate('problems', 'name frequency')
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' })
+    }
+
+    const problems = project.problems || []
+    if (!problems.length) {
+      return res.status(200).json({
+        data: [],
+        totalFrequency: 0,
+        totalCategories: 0,
+        topCause: 'N/A',
+        principalCauses: [],
+        threshold
+      })
+    }
+
+    const totalFrequency = problems.reduce((sum, p) => sum + (p.frequency || 0), 0)
+    let cumulativeSum = 0
+    let cumulativeFrequency = 0
+
+    const processedData = problems
+      .slice()
+      .sort((a, b) => (b.frequency || 0) - (a.frequency || 0))
+      .map(problem => {
+        const freq = Number(problem.frequency) || 0
+        const percentage = totalFrequency > 0 ? (freq / totalFrequency) * 100 : 0
+        cumulativeSum += percentage
+        cumulativeFrequency += freq
+
+        return {
+          category: problem.name,
+          frequency: freq,
+          percentage,
+          cumulative: cumulativeFrequency,
+          cumulativePercentage: cumulativeSum,
+          isCritical: false,
+          isGolden: false
+        }
+      })
+
+    const thresholdIndex = processedData.findIndex(item => item.cumulativePercentage > threshold)
+    const criticalEndIndex = thresholdIndex === -1 ? processedData.length - 1 : thresholdIndex
+
+    processedData.forEach((item, index) => {
+      const isCritical = index <= criticalEndIndex
+      item.isCritical = isCritical
+      item.isGolden = isCritical
+    })
+
+    const principalCauses = processedData.filter(item => item.isCritical)
+    const topCause = processedData[0]?.category || 'N/A'
+
+    return res.status(200).json({
+      data: processedData,
+      totalFrequency,
+      totalCategories: problems.length,
+      topCause,
+      principalCauses,
+      threshold
+    })
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to compute Pareto analysis' })
+  }
+}
+
+export const getParetoChartData = async (req, res) => {
+  const { id } = req.params
+  const userId = req.user.id
+  const thresholdParam = req.query.threshold
+
+  let threshold = 80
+  if (typeof thresholdParam !== 'undefined') {
+    const t = Number(thresholdParam)
+    if (!Number.isFinite(t) || t < 0 || t > 100) {
+      return res.status(400).json({ error: 'Invalid threshold. Must be a number between 0 and 100' })
+    }
+    threshold = t
+  }
+
+  try {
+    const project = await Project.findOne({ _id: id, user: userId }).populate('problems', 'name frequency')
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' })
+    }
+
+    const problems = project.problems || []
+    if (!problems.length) {
+      return res.status(200).json([])
+    }
+
+    const totalFrequency = problems.reduce((sum, p) => sum + (p.frequency || 0), 0)
+    let cumulativeSum = 0
+    const processedData = problems
+      .slice()
+      .sort((a, b) => (b.frequency || 0) - (a.frequency || 0))
+      .map(problem => {
+        const freq = Number(problem.frequency) || 0
+        const percentage = totalFrequency > 0 ? (freq / totalFrequency) * 100 : 0
+        cumulativeSum += percentage
+        return {
+          category: problem.name,
+          frequency: freq,
+          percentage,
+          cumulative: cumulativeSum,
+          isGolden: false
+        }
+      })
+
+    let running = 0
+    processedData.forEach(item => {
+      running += item.percentage
+      if (running <= threshold || Math.abs(running - threshold) < 1e-9) {
+        item.isGolden = true
+      }
+    })
+
+    return res.status(200).json(processedData)
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to compute Pareto chart data' })
+  }
+}
