@@ -30,6 +30,8 @@ nano .env  # o usa tu editor preferido
 - **MONGODB_URI**: URL de conexión a MongoDB
   - Para desarrollo local: `mongodb://localhost:27017/pareto_diagram`
   - Para MongoDB Atlas: `mongodb+srv://username:password@cluster.mongodb.net/`
+- **DB_NAME**: Nombre de la base de datos (por defecto en desarrollo)
+- **DB_NAME_TEST**: Nombre de la base de datos usada cuando `NODE_ENV=test`
 
 #### Seguridad
 - **SECRET**: Clave secreta para JWT (mínimo 64 caracteres)
@@ -39,6 +41,10 @@ nano .env  # o usa tu editor preferido
 - **EMAIL_SERVICE**: Servicio de email (ej: gmail)
 - **EMAIL_USER**: Tu dirección de email
 - **EMAIL_PASS**: Contraseña de aplicación (no tu contraseña normal)
+
+#### Servidor / CORS
+- **PORT**: Puerto del servidor (por defecto 3000)
+- **FRONTEND_URL**: Origen permitido para el frontend (por defecto `http://localhost:5713`)
 
 ### 5. Ejecuta la aplicación
 ```bash
@@ -55,6 +61,12 @@ pnpm start
 - ✅ Validación de propiedad de recursos
 - ✅ Middleware de autorización
 - ✅ Variables de entorno para información sensible
+
+Todas las rutas bajo `/api/*` (excepto autenticación) requieren el header:
+
+```
+Authorization: Bearer <token>
+```
 
 ## 📁 Estructura del Proyecto
 
@@ -93,5 +105,24 @@ src/
 - `DELETE /api/problems/:projectId/:problemId` - Eliminar problema
 
 ### Pareto
-- `GET /api/pareto/:projectId` - Análisis de Pareto del proyecto
-- `GET /api/pareto/:projectId/chart` - Datos para la gráfica de Pareto
+- `GET /api/pareto/:projectId` - Datos unificados para análisis y gráfica de Pareto
+  - Query opcional: `threshold` (0–100, por defecto 80)
+  - Respuesta:
+
+```json
+{
+  "data": [
+    {
+      "category": "Falla A",
+      "frequency": 42,
+      "percentage": 35.0,
+      "cumulative": 35.0,
+      "isCritical": true
+    }
+  ],
+  "totalFrequency": 120,
+  "totalCategories": 5,
+  "topCause": "Falla A",
+  "threshold": 80
+}
+```
