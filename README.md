@@ -105,7 +105,7 @@ src/
 - `DELETE /api/problems/:projectId/:problemId` - Eliminar problema
 
 ### Pareto
-- `GET /api/pareto/:projectId` - Datos unificados para análisis y gráfica de Pareto
+- `GET /api/analysis/:projectId` - Datos unificados para análisis y gráfica de Pareto
   - Query opcional: `threshold` (0–100, por defecto 80)
   - Respuesta:
 

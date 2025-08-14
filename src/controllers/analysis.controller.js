@@ -2,7 +2,7 @@ import Project from '../models/project.model.js'
 import { validateThreshold, computeParetoBase, markCritical } from '../libs/pareto.js'
 
 // Unified Pareto endpoint: returns data suitable for both analysis and chart in a single response
-export const getPareto = async (req, res, next) => {
+export const getAnalysis = async (req, res, next) => {
   const { projectId } = req.params
   const userId = req.user.id
   const thresholdParam = req.query.threshold ?? req.body?.threshold
@@ -31,17 +31,10 @@ export const getPareto = async (req, res, next) => {
 
     const base = computeParetoBase(problems)
     const marked = markCritical(base.processedData, threshold)
-    const data = marked.map(item => ({
-      category: item.category,
-      frequency: item.frequency,
-      percentage: item.percentage,
-      cumulative: item.cumulativePercentage,
-      isCritical: item.isCritical
-    }))
-    const topCause = data[0]?.category || 'N/A'
+    const topCause = marked[0]?.category || 'N/A'
 
     return res.status(200).json({
-      data,
+      data: marked,
       totalFrequency: base.totalFrequency,
       totalCategories: base.totalCategories,
       topCause,

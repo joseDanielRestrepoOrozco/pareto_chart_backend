@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getPareto } from '../controllers/pareto.controller.js'
+import { getAnalysis } from '../controllers/analysis.controller.js'
 import authRequired from '../middlewares/authRequired.js'
 
 const router = Router()
@@ -7,6 +7,6 @@ const router = Router()
 router.use(authRequired)
 
 // GET /api/pareto/:projectId
-router.get('/:projectId', getPareto)
+router.get('/:projectId', getAnalysis)
 
 export default router
