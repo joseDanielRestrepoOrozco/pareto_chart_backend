@@ -88,6 +88,10 @@ src/
 - `DELETE /api/projects/:id` - Eliminar proyecto
 
 ### Problemas
-- `POST /api/projects/:id/problems` - Agregar problema al proyecto
-- `PUT /api/projects/:id/problems/:problemId` - Actualizar problema
-- `DELETE /api/projects/:id/problems/:problemId` - Eliminar problema
+- `POST /api/problems/:projectId` - Agregar problema al proyecto
+- `PUT /api/problems/:projectId/:problemId` - Actualizar problema
+- `DELETE /api/problems/:projectId/:problemId` - Eliminar problema
+
+### Pareto
+- `GET /api/pareto/:projectId` - Análisis de Pareto del proyecto
+- `GET /api/pareto/:projectId/chart` - Datos para la gráfica de Pareto
