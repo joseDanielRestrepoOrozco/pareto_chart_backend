@@ -14,9 +14,6 @@ importers:
       cors:
         specifier: ^2.8.5
         version: 2.8.5
-      cross-env:
-        specifier: ^7.0.3
-        version: 7.0.3
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
@@ -36,6 +33,9 @@ importers:
         specifier: ^3.25.67
         version: 3.25.67
     devDependencies:
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       nodemon:
         specifier: ^3.1.10
         version: 3.1.10

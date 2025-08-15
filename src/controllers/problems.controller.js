@@ -22,11 +22,16 @@ export const createProblem = async (req, res, next) => {
   }
 }
 
-export const deleteProblem = async (req, res) => {
-  const { projectId, problemId } = req.params
+export const deleteProblem = async (req, res, next) => {
+  const { problemId } = req.params
 
   try {
-    const project = await Project.findOne({ _id: projectId, user: req.user.id })
+    const problem = await Problem.findById(problemId)
+    if (!problem) {
+      return res.status(404).json({ error: 'Problem not found' })
+    }
+
+    const project = await Project.findOne({ _id: problem.project.toString(), user: req.user.id })
     if (!project) {
       return res.status(404).json({ error: 'Project not found' })
     }
@@ -37,16 +42,21 @@ export const deleteProblem = async (req, res) => {
     await Problem.findByIdAndDelete(problemId)
     res.status(200).json({ message: 'Problem deleted successfully' })
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete problem' })
+    next(error)
   }
 }
 
-export const updateProblem = async (req, res) => {
-  const { projectId, problemId } = req.params
+export const updateProblem = async (req, res, next) => {
+  const { problemId } = req.params
   const { name, frequency } = req.body
 
   try {
-    const project = await Project.findOne({ _id: projectId, user: req.user.id })
+    const problem = await Problem.findById(problemId)
+    if (!problem) {
+      return res.status(404).json({ error: 'Problem not found' })
+    }
+
+    const project = await Project.findOne({ _id: problem.project.toString(), user: req.user.id })
     if (!project) {
       return res.status(404).json({ error: 'Project not found' })
     }
@@ -63,6 +73,6 @@ export const updateProblem = async (req, res) => {
 
     res.status(200).json(updatedProblem)
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update problem' })
+    next(error)
   }
 }
