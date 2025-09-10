@@ -68,10 +68,6 @@ export const login = async (req, res, next) => {
   }
 }
 
-export const logout = (req, res) => {
-  res.status(200).end()
-}
-
 export const verifyToken = async (req, res, next) => {
   const token = req.body.token
 
