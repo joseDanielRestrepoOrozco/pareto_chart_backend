@@ -97,7 +97,7 @@ export const deleteProject = async (req, res, next) => {
 
 		await userModel.findByIdAndUpdate(user.id, { $pull: { projects: id } })
 
-		res.status(204).json({ message: 'Project deleted successfully' })
+		res.status(204).end()
 	} catch (error) {
 		next(error)
 	}

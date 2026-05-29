@@ -8,7 +8,7 @@ export const createAccessToken = (payload, options = {}) => {
 			config.SECRET,
 			{ expiresIn: options.expiresIn || '7d', ...options },
 			(err, token) => {
-				if (err) reject(err)
+				if (err) return reject(err)
 				resolve(token)
 			}
 		)
