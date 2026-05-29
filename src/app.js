@@ -1,14 +1,13 @@
-import express from 'express'
 import cors from 'cors'
+import express from 'express'
 import { connectDB } from './db.js'
-import authRoutes from './routes/auth.routes.js'
-import projectsRoutes from './routes/projects.routes.js'
-import problemsRoutes from './routes/problems.routes.js'
-import analysisRoutes from './routes/analysis.routes.js'
-
+import errorHandler from './middlewares/errorHandler.js'
 import tokenExtractor from './middlewares/tokenExtractor.js'
 import unknownEndpoint from './middlewares/unknownEndpoint.js'
-import errorHandler from './middlewares/errorHandler.js'
+import analysisRoutes from './routes/analysis.routes.js'
+import authRoutes from './routes/auth.routes.js'
+import problemsRoutes from './routes/problems.routes.js'
+import projectsRoutes from './routes/projects.routes.js'
 
 const app = express()
 
