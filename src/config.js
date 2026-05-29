@@ -1,4 +1,6 @@
-process.loadEnvFile();
+if (process.env.NODE_ENV !== 'production') {
+	process.loadEnvFile();
+}
 
 const PORT = process.env.PORT || 3000
 
