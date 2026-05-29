@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import {
-  createProject,
-  getProjectById,
-  updateProject,
-  deleteProject,
-  getProjectsByUser
+	createProject,
+	deleteProject,
+	getProjectById,
+	getProjectsByUser,
+	updateProject,
 } from '../controllers/projects.controller.js'
 import authRequired from '../middlewares/authRequired.js'
 import validateSchema from '../middlewares/validator.middleware.js'

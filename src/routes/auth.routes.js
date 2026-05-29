@@ -1,7 +1,21 @@
 import { Router } from 'express'
-import { register, login, verifyToken, verifyCode, secondFactorAuthentication, resetPassword, changeResetPassword } from '../controllers/auth.controller.js'
-import { registerSchema, loginSchema, verifyCodeSchema, verifyEmailSchema, changeResetPasswordSchema } from '../schemas/auth.schema.js'
+import {
+	changeResetPassword,
+	login,
+	register,
+	resetPassword,
+	secondFactorAuthentication,
+	verifyCode,
+	verifyToken,
+} from '../controllers/auth.controller.js'
 import validateSchema from '../middlewares/validator.middleware.js'
+import {
+	changeResetPasswordSchema,
+	loginSchema,
+	registerSchema,
+	verifyCodeSchema,
+	verifyEmailSchema,
+} from '../schemas/auth.schema.js'
 
 const router = Router()
 
@@ -13,10 +27,18 @@ router.post('/verify', verifyToken)
 
 router.post('/verifyCode', validateSchema(verifyCodeSchema), verifyCode)
 
-router.post('/secondFactorAuthentication', validateSchema(verifyCodeSchema), secondFactorAuthentication)
+router.post(
+	'/secondFactorAuthentication',
+	validateSchema(verifyCodeSchema),
+	secondFactorAuthentication
+)
 
 router.post('/resetPassword', validateSchema(verifyEmailSchema), resetPassword)
 
-router.put('/changeResetPassword', validateSchema(changeResetPasswordSchema), changeResetPassword)
+router.put(
+	'/changeResetPassword',
+	validateSchema(changeResetPasswordSchema),
+	changeResetPassword
+)
 
 export default router

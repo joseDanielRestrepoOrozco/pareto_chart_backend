@@ -1,11 +1,11 @@
-const tokenExtractor = (req, res, next) => {
-  const authorization = req.get('Authorization')
+const tokenExtractor = (req, _res, next) => {
+	const authorization = req.get('Authorization')
 
-  if (authorization && authorization.startsWith('Bearer ')) {
-    req.token = authorization.replace('Bearer ', '')
-  }
+	if (authorization?.startsWith('Bearer ')) {
+		req.token = authorization.replace('Bearer ', '')
+	}
 
-  next()
+	next()
 }
 
 export default tokenExtractor

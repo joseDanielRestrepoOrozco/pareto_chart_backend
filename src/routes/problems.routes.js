@@ -1,5 +1,9 @@
 import { Router } from 'express'
-import { createProblem, deleteProblem, updateProblem } from '../controllers/problems.controller.js'
+import {
+	createProblem,
+	deleteProblem,
+	updateProblem,
+} from '../controllers/problems.controller.js'
 import authRequired from '../middlewares/authRequired.js'
 import validateSchema from '../middlewares/validator.middleware.js'
 import { problemSchema } from '../schemas/problem.schema.js'
